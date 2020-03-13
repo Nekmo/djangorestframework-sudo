@@ -21,6 +21,13 @@ def get_user_remaning_time(user: AbstractUser):
     return expiration_time
 
 
+def expire_now(user: AbstractUser) -> None:
+    if not get_user_remaning_time(user):
+        return
+    user.last_login = timezone.now() - settings.REST_FRAMEWORK_SUDO_EXPIRATION - datetime.timedelta(seconds=1)
+    user.save()
+
+
 def get_expires_at(user: AbstractUser):
     return timezone.now() + get_user_remaning_time(user)
 

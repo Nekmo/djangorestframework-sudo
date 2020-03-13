@@ -1,8 +1,10 @@
+from rest_framework.serializers import Serializer
+
 from rest_framework_sudo.expiration import get_expires_at
 from rest_framework import permissions, generics
 from rest_framework.response import Response
 
-from rest_framework_sudo.serializers import StatusSerializer, UpdateStatusSerializer
+from rest_framework_sudo.serializers import StatusSerializer, UpdateStatusSerializer, ExpireNowSerializer
 
 
 class StatusView(generics.GenericAPIView):
@@ -25,3 +27,10 @@ class UpdateStatusView(generics.CreateAPIView, generics.GenericAPIView):
     def create(self, request, *args, **kwargs):
         super(UpdateStatusView, self).create(request, *args, **kwargs)
         return Response({'detail': f'Expires at {get_expires_at(request.user)}'})
+
+
+class ExpireNowView(generics.CreateAPIView, generics.GenericAPIView):
+    """
+    """
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = ExpireNowSerializer
